@@ -1,0 +1,61 @@
+function [estimated_error, reconstructedCovMat] = TOPLR(n, m, r, tolerance)
+% ToeplitzLR: function to estimate the Toeplitz covariance matrix using
+% quadratic sampling
+%
+% Inputs:
+% n: size of the covariance matrix
+% m: number of quadratic samples
+% r: rank of the low-rank matrix
+% tolerance: tolerance value for optimization
+%
+% Outputs:
+% estimated_error: error between the estimated and true covariance matrix
+% reconstructedCovMat: the reconstructed covariance matrix
+
+% Set up the true Toeplitz covariance matrix
+mu = 0;
+sigma = 1;
+freq = [0.5, -0.5];
+amp = normrnd(mu, sigma, 1, r);
+r1 = exp(1i * freq);
+L = zeros(n, r);
+L(1, :) = r1;
+for k = 2:n
+L(k, :) = amp .* (L(1, :) .^ k);
+end
+L(1, :) = amp .* L(1, :);
+trueCovMat = L * L';
+
+% Perform quadratic sampling
+quadSamples = normrnd(mu, sigma, n, m);
+A = zeros(n, n, m);
+y = zeros(m, 1);
+for k = 1:m
+T = zeros(n, 1);
+T(:, 1) = quadSamples(:, k);
+A(:, :, k) = T * T';
+y(k, 1) = T' * trueCovMat * T;
+end
+
+% Optimization
+cvx_begin
+variable reconstructedCovMat(n, n) toeplitz
+reconstructedCovMat(n, n) == semidefinite(n);
+expression T(n, 1)
+expression b(n, m)
+minimize(norm(reconstructedCovMat, 1))
+subject to
+for k = 1:m
+b = quadSamples(:, k);
+A2(k, 1) = b' * reconstructedCovMat * b;
+end
+reconstructedCovMat(n, n) == semidefinite(n);
+norm(y - A2, 2) / norm(y, 2) <= tolerance;
+cvx_end
+
+% Calculate the error between the estimated and true covariance matrix
+estimated_error = (norm(reconstructedCovMat - trueCovMat, 'fro') / norm(trueCovMat, 'fro'))^2;
+end
+
+
+

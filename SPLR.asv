@@ -1,0 +1,59 @@
+function [estimatedError, reconstructedCovMat] = SPLR2(r, m, n, tolerance)
+% SPLR: function to estimate the sparse covariance matrix using quadratic sampling
+%
+% Inputs:
+% r: rank of low-rank matrix
+% m: number of quadratic samples
+% n: size of the covariance matrix
+% tolerance: tolerance value for optimization
+%
+% Outputs:
+% estimatedError: error between the estimated and true covariance matrix
+% reconstructedCovMat: the reconstructed sparse covariance matrix
+
+% Set up the sparse low-rank matrix
+mu = 0;
+sigma = 1;
+quadSamples = normrnd(mu, sigma, n, m);
+L = normrnd(mu, sigma, n, r);
+Sigk = L * L';
+Sig = zeros(n, n);
+idx = randperm(n, r);
+Sig(idx, idx) = Sigk;
+
+% Add some noise to the samples
+for k = 1:n * m
+    if quadSamples(k) > 0
+        quadSamples(k) = quadSamples(k) + 1;
+    elseif quadSamples(k) < 0
+        quadSamples(k) = quadSamples(k) - 1;
+    end
+end
+
+% Perform quadratic sampling
+A = zeros(n, n, m);
+y = zeros(m, 1);
+for k = 1:m
+    T = zeros(n, 1);
+    T(:, 1) = quadSamples(:, k);
+    A(:, :, k) = T * T';
+    y(k, 1) = T' * Sig * T;
+end
+
+% Optimization
+cvx_begin
+    variable reconstructedCovMat(n, n) semidefinite
+    expression T(n, 1)
+    expression b(n, m)
+    minimize(norm(reconstructedCovMat, 1))
+    subject to
+    for k = 1:m
+    b = quadSamples(:, k);
+    A2(k, 1) = b' * reconstructedCovMat * b;
+    end
+    norm(y - A2, 1)/norm(y, 1) <= tolerance;
+cvx_end
+
+% Calculate the error between the estimated and true covariance matrix
+estimatedError = (norm(reconstructedCovMat - Sig, 'fro')/norm(Sig, 'fro'))^2;
+end

@@ -1,0 +1,37 @@
+function [LRerr, reconstructed matrix] = LR(r,m,n,tolerance)
+%% Setup low-rank matrix
+
+mu=0 ;
+sigma=1 ;
+a = normrnd(mu,sigma,n,m);
+L = normrnd(mu,sigma,n,r);
+Sig=L*L';
+
+%% Quadratic sampling
+
+A=zeros(n,n,m);
+y=zeros(m,1);
+for k=1:m 
+    T=zeros(n,1);
+    T(:,1)=a(:,k) ;
+    A(:,:,k)= T*T' ;
+    y(k,1)= T'*Sig*T;
+end
+%% Optimization
+
+  cvx_begin 
+     variable M2(n,n) semidefinite
+     expression T(n,1)
+     expression b(n,m)
+       minimize( trace (M2) )
+       subject to
+         for k=1:m
+             b= a(:,k);
+             A2(k,1)= b'*M2*b;
+         end
+         norm(y-A2,1)/norm(y,1)<= tolerance;
+  cvx_end
+  
+%% Report
+LRerr= (norm(M2-Sig,'fro')/norm(Sig,'fro'))^2
+ee=eig(Sig);
