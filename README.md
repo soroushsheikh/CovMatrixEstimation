@@ -64,38 +64,40 @@ In this project, the quality of the covariance matrix reconstruction is evaluate
 
 1. In order to evaluate the performance of the reconstruction process, the normalized mean square error (NMSE) was utilized as the evaluation metric. This metric was plotted over the number of measurements for both low rank matrices and sparse matrices. For low rank matrices, the NMSE was plotted for different ranks of matrices, which allows us to see the accuracy of the reconstruction for different ranks. On the other hand, for sparse matrices, the NMSE was plotted over different sparsity levels, showcasing the robustness of the reconstruction for different levels of sparsity. 
 
-[Result figures]()
+![Result figure1](https://github.com/soroushsheikh/CovMatrixEstimation/blob/main/Results/NoNoise.png)
 
 2. The robustness of the reconstruction against noise is also evaluated by plotting the NMSE for different levels of noise introduced. we used the fixed sparsity level of `k=180` and rank `r=5` for this experiment.
 
+![Result figure2](https://github.com/soroushsheikh/CovMatrixEstimation/blob/main/Results/Noise.png)
+
 3. Table is provided to show the number of measurements obtained using quadratic sampling and the minimum number of samples needed for reconstruction based on the information theory limitation, with a tolerance level of 0.01. This demonstrates the efficiency of the quadratic sampling method.
 
-  3.1. Low-rank matrices
+      1. Low-rank matrices
 
-  | Rank of Matrix | Number of Quadratic Samples | Minimum Samples Required (Information Theory) |
-  | -------------  | ---------------------------  | --------------------------------------------- |
-  | 1              | 50                           | 40                                             |
-  | 3              | 185                          | 117                                            |
-  | 5              | 255                          | 190                                            |
-  | 10             | 415                          | 375                                            |
-  
-  3.2 Sparce matrices
-  
-  | Sparsity Level | Number of Quadratic Samples | Minimum Samples Required (Information Theory) |
-  | -------------- | ----------------- | ------------------------------------ |
-  | 45            | 45                | 105                                   |
-  | 135           | 135               | 220                                   |
-  | 180           | 180               | 288                                   |
-  | 405           | 405               | 490                                   |
-  
-  3.3 Low-rank and Toeplitz matrices.
+      | Rank of Matrix | Number of Quadratic Samples | Minimum Samples Required (Information Theory) |
+      | -------------  | ---------------------------  | --------------------------------------------- |
+      | 1              | 50                           | 40                                             |
+      | 3              | 185                          | 117                                            |
+      | 5              | 255                          | 190                                            |
+      | 10             | 415                          | 375                                            |
 
-  |Rank of Matrix | Number of Quadratic Samples | Minimum Samples Required (Information Theory)|
-  --- | --- | ---
-  |5 | 5 | 15|
-  |10 | 10 | 25|
-  |15 | 15 | 30|
-  |20 | 20 | 35|
+      2. Sparce matrices
+
+      | Sparsity Level | Number of Quadratic Samples | Minimum Samples Required (Information Theory) |
+      | -------------- | ----------------- | ------------------------------------ |
+      | 45            | 45                | 105                                   |
+      | 135           | 135               | 220                                   |
+      | 180           | 180               | 288                                   |
+      | 405           | 405               | 490                                   |
+
+      3. Low-rank and Toeplitz matrices.
+
+      |Rank of Matrix | Number of Quadratic Samples | Minimum Samples Required (Information Theory)|
+      --- | --- | ---
+      |5 | 5 | 15|
+      |10 | 10 | 25|
+      |15 | 15 | 30|
+      |20 | 20 | 35|
 
 
 
