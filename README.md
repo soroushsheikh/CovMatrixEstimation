@@ -56,13 +56,26 @@ The code is written in MATLAB, and is intended for researchers and practitioners
 
 - `tolerance` - Tolerance for optimization. 
   A scalar value that specifies the tolerance for optimization.
+  
+  
+## Methodology
+The methodology for this project involves two main steps:
+
+1. Generation of matrices: 
+The first step is to generate the matrices that we want to reconstruct. These matrices can be low-rank matrices, sparse and low rank matrices, sparse and symmetric matrices, or Toeplitz and low rank matrices. The user can specify the type of matrix they want to generate and its parameters such as the rank, sparsity level, mean, and standard deviation of the normal random matrix, etc.
+
+2. Quadratic Sampling and Reconstruction: 
+The second step is to take quadratic samples of the generated matrix and use these samples to reconstruct the original matrix. The number of samples taken and the method of reconstruction are crucial to the accuracy of the final result. To obtain quadratic samples, we use a technique called quadratic measurement, which involves multiplying the matrix with random Gaussian vectors and then taking the inner product of the resulting vectors. The inner products are used as the quadratic samples.
+
+3. Optimization:
+We then use the quadratic samples to reconstruct the original matrix using an optimization-based method. This involves finding the matrix that minimizes the difference between the original matrix and the reconstructed matrix. The optimization problem is solved using alternating minimization, where the matrix is iteratively updated until the solution converges to within a specified tolerance.
 
 
 ## Results
 
-In this project, the quality of the covariance matrix reconstruction is evaluated using the normalized mean square error (NMSE) as the metric. The following results are obtained:
+The accuracy of the reconstruction is evaluated using the normalized mean square error (NMSE), which measures the difference between the original matrix and the reconstructed matrix.
 
-1. In order to evaluate the performance of the reconstruction process, the normalized mean square error (NMSE) was utilized as the evaluation metric. This metric was plotted over the number of measurements for both low rank matrices and sparse matrices. For low rank matrices, the NMSE was plotted for different ranks of matrices, which allows us to see the accuracy of the reconstruction for different ranks. On the other hand, for sparse matrices, the NMSE was plotted over different sparsity levels, showcasing the robustness of the reconstruction for different levels of sparsity. 
+1. NMSE was plotted over the number of measurements for both low rank matrices and sparse matrices. For low rank matrices, the NMSE was plotted for different ranks of matrices, which allows us to see the accuracy of the reconstruction for different ranks. On the other hand, for sparse matrices, the NMSE was plotted over different sparsity levels, showcasing the robustness of the reconstruction for different levels of sparsity. 
 
 ![Result figure1](https://github.com/soroushsheikh/CovMatrixEstimation/blob/main/Results/NoNoise.png)
 
